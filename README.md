@@ -10,6 +10,8 @@ Trained on the famous Iris dataset using scikit-learn.
 
 Uses a Random Forest Classifier to achieve high accuracy.
 
+https://colab.research.google.com/drive/19G6r-syUYSnyqmXlenAMeNHMsnrvB46P?usp=sharing
+
 🌐 Flask REST API
 
 Serves predictions at a /predict endpoint.
