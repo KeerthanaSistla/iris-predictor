@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <title>Iris Flower Predictor</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="container">
@@ -42,48 +42,48 @@
     <img id="flowerImage" src="" alt="Predicted Iris Flower" class="flower-img" style="display:none;">
   </div>
 
-  <script>
-    const species = ["Iris-setosa", "Iris-versicolor", "Iris-virginica"];
-    const images = {
-      0: "setosa.png",
-      1: "versicolor.png",
-      2: "verginica.png"
-    };
+<script>
+  const species = ["Iris-setosa", "Iris-versicolor", "Iris-virginica"];
+  const images = {
+    0: "{{ url_for('static', filename='setosa.png') }}",
+    1: "{{ url_for('static', filename='versicolor.png') }}",
+    2: "{{ url_for('static', filename='verginica.png') }}"
+  };
 
-    async function predict() {
-      const features = [
-        parseFloat(document.getElementById("sepal_length").value),
-        parseFloat(document.getElementById("sepal_width").value),
-        parseFloat(document.getElementById("petal_length").value),
-        parseFloat(document.getElementById("petal_width").value)
-      ];
+  async function predict() {
+    const features = [
+      parseFloat(document.getElementById("sepal_length").value),
+      parseFloat(document.getElementById("sepal_width").value),
+      parseFloat(document.getElementById("petal_length").value),
+      parseFloat(document.getElementById("petal_width").value)
+    ];
 
-      if (features.some(isNaN)) {
-        alert("Please fill in all fields with valid numbers!");
-        return;
-      }
-
-      try {
-        const res = await fetch("http://127.0.0.1:5000/predict", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ features })
-        });
-
-        if (!res.ok) throw new Error("Server error");
-
-        const data = await res.json();
-        const predClass = data.prediction;
-
-        document.getElementById("result").innerHTML =
-          `Predicted Species: <b>${species[predClass]}</b>`;
-        document.getElementById("flowerImage").src = images[predClass];
-        document.getElementById("flowerImage").style.display = "block";
-      } catch (err) {
-        document.getElementById("result").innerText = "❌ Error: Unable to fetch prediction.";
-        document.getElementById("flowerImage").style.display = "none";
-      }
+    if (features.some(isNaN)) {
+      alert("Please fill in all fields with valid numbers!");
+      return;
     }
-  </script>
+
+    try {
+      const res = await fetch("/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ features })
+      });
+
+      if (!res.ok) throw new Error("Server error");
+
+      const data = await res.json();
+      const predClass = data.prediction;
+
+      document.getElementById("result").innerHTML = 
+        `Predicted Species: <b>${species[predClass]}</b>`;
+      document.getElementById("flowerImage").src = images[predClass];
+      document.getElementById("flowerImage").style.display = "block";
+    } catch (err) {
+      document.getElementById("result").innerText = "❌ Error: Unable to fetch prediction.";
+      document.getElementById("flowerImage").style.display = "none";
+    }
+  }
+</script>
 </body>
 </html>
