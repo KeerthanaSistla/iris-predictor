@@ -45,16 +45,15 @@ h1 {
 }
 
 .form label {
-  display: block;
   font-weight: bold;
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
 .form input {
-  display: block;
   text-align: center;
   padding: 0.7rem;
+  margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   border: 0.1rem solid #ccc;
   border-radius: 0.6rem;
@@ -113,7 +112,6 @@ button:hover {
 
 .grid-container label {
   font-weight: bold;
-  display: block;
 }
 
 .grid-container input {
