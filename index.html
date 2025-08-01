@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <title>Iris Flower Predictor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Iris Flower Prediction</h1>
+    <p class="subtitle">Enter flower measurements to identify the species</p>
+    <img src="https://www.researchgate.net/profile/Shohal-Hossain-2/publication/367220930/figure/fig1/AS:11431281113694842@1674035105600/Three-species-of-IRIS-flower.jpg" alt="Iris Flowers" class="flower-img">
+    <br><br>
+    <div class="form">
+      <div class="grid-container">
+        <div>
+          <label for="sepal_length">Sepal Length (cm):</label>
+          <input id="sepal_length" type="number" min="4.0" max="8.0" step="0.1" placeholder="4.3 - 7.9" required>
+        </div>
+
+        <div>
+          <label for="sepal_width">Sepal Width (cm):</label>
+          <input id="sepal_width" type="number" min="2.0" max="4.5" step="0.1" placeholder="2.0 - 4.4" required>
+        </div>
+
+        <div>
+          <label for="petal_length">Petal Length (cm):</label>
+          <input id="petal_length" type="number" min="1.0" max="7.0" step="0.1" placeholder="1.0 - 6.9" required>
+        </div>
+
+        <div>
+          <label for="petal_width">Petal Width (cm):</label>
+          <input id="petal_width" type="number" min="0.1" max="2.5" step="0.1" placeholder="0.1 - 2.5" required>
+        </div>
+      </div>
+      <button onclick="predict()">Predict</button>
+    </div>      
+
+    <div class="result" id="result"></div>
+    <img id="flowerImage" src="" alt="Predicted Iris Flower" class="flower-img" style="display:none;">
+  </div>
+
+  <script>
+    const species = ["Iris-setosa", "Iris-versicolor", "Iris-virginica"];
+    const images = {
+      0: "setosa.png",
+      1: "versicolor.png",
+      2: "verginica.png"
+    };
+
+    async function predict() {
+      const features = [
+        parseFloat(document.getElementById("sepal_length").value),
+        parseFloat(document.getElementById("sepal_width").value),
+        parseFloat(document.getElementById("petal_length").value),
+        parseFloat(document.getElementById("petal_width").value)
+      ];
+
+      if (features.some(isNaN)) {
+        alert("Please fill in all fields with valid numbers!");
+        return;
+      }
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ features })
+        });
+
+        if (!res.ok) throw new Error("Server error");
+
+        const data = await res.json();
+        const predClass = data.prediction;
+
+        document.getElementById("result").innerHTML =
+          `Predicted Species: <b>${species[predClass]}</b>`;
+        document.getElementById("flowerImage").src = images[predClass];
+        document.getElementById("flowerImage").style.display = "block";
+      } catch (err) {
+        document.getElementById("result").innerText = "❌ Error: Unable to fetch prediction.";
+        document.getElementById("flowerImage").style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
