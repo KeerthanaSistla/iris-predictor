@@ -128,6 +128,7 @@ button:hover {
 
   .container {
     width: 85%;
+    max-width: 90%;
     padding: 5vmin 4vmin;
     border-radius: 1rem;
   }
